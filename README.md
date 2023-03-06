@@ -22,10 +22,14 @@ make -j
 ## Todo List
 1. Module and Functional
 - [ ] Add fisheye calibration pipeline for single board and sample data.
-- [ ] Add KB model, FOV model.
+- [ ] Add K-B model, FOV model.
+- [ ] Add centroid circle estimation.
+- [ ] Add Ortho-rectified implementation
 - [ ] Add panoramic stitching algorithms.
 - [ ] Add cylinder expansion.
+- [ ] Add omnidirectional model.
 - [ ] Add blender code for virtual data.
+- [ ] Add 23-parameter estimation method.
 
 2. Code Polishing
 - [ ] Add xml configuration in data preparing.
@@ -35,7 +39,7 @@ make -j
 
 3. Documentary
 - [ ] Camera Lens.
-
+- [ ] How to chose proper model for modeling the lens.
 ## Third_Party
 - [OpenCV](https://github.com/opencv/opencv)
 - [Ceres-Solver](https://github.com/ceres-solver/ceres-solver)
