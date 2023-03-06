@@ -29,6 +29,7 @@ make -j
 - [ ] Add cylinder expansion.
 - [ ] Add omnidirectional model.
 - [ ] Add blender code for virtual data.
+- [ ] Add blender patch for K-B model.
 - [ ] Add 23-parameter estimation method.
 
 2. Code Polishing
