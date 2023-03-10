@@ -23,6 +23,7 @@ make -j
 1. Module and Functional
 - [ ] Add fisheye calibration pipeline for single board and sample data.
 - [ ] Add K-B model, FOV model.
+- [ ] Add longitude-latitude expansion.
 - [ ] Add centroid circle estimation.
 - [ ] Add Ortho-rectified implementation
 - [ ] Add panoramic stitching algorithms.
@@ -41,6 +42,10 @@ make -j
 3. Documentary
 - [ ] Camera Lens.
 - [ ] How to chose proper model for modeling the lens.
+
+4. Machine
+- [ ] Insta360
+- [ ] Stereo Fisheye
 ## Third_Party
 - [OpenCV](https://github.com/opencv/opencv)
 - [Ceres-Solver](https://github.com/ceres-solver/ceres-solver)
