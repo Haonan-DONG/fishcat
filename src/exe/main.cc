@@ -35,8 +35,8 @@
 #include <functional>
 
 #include "base/log.h"
-
-using namespace std;
+#include "calibration/calibration_base.h"
+#include "calibration/intrinsic_calibration.h"
 
 typedef std::function<int(int, char **)> command_func_t;
 
@@ -73,6 +73,36 @@ int ShowHelp(const std::vector<std::pair<std::string, command_func_t>> &commands
 
 int RunIntrinsicCalibration(int argc, char **argv)
 {
+    fishcat::IntrinsicCalibrationHelp();
+    fishcat::CalibrationSettings s;
+    const std::string input_settings_file = argc > 1 ? argv[1] : "test.xml";
+    cv::FileStorage fs(input_settings_file, cv::FileStorage::READ); // Read the CalibrationSettings
+
+    if (!fs.isOpened())
+    {
+        LOG(ERROR) << "Could not open the configuration file: \""
+                   << input_settings_file
+                   << "\""
+                   << std::endl;
+        return -1;
+    }
+
+    // from the setting in the xml file.
+    fs["Settings"] >> s;
+    fs.release(); // close CalibrationSettings file
+
+    if (!s.good_input_)
+    {
+        LOG(ERROR) << "Invalid input detected. Application stopping. "
+                   << std::endl;
+        return -1;
+    }
+
+    return true;
+}
+
+int RunPanoramicStitching(int argc, char **argv)
+{
     return true;
 }
 
@@ -83,6 +113,7 @@ int main(int argc, char **argv)
     std::vector<std::pair<std::string, command_func_t>> commands;
 
     commands.emplace_back("intrinsic_calibration", &RunIntrinsicCalibration);
+    commands.emplace_back("panoramic_stitching", &RunPanoramicStitching);
 
     if (argc == 1)
     {
