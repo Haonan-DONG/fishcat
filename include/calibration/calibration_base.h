@@ -100,6 +100,8 @@ namespace fishcat
         CALIBRATED = 2
     };
 
+    // important declaration for ">>" operator in Persistence.hpp
+    void read(const cv::FileNode &node, CalibrationSettings &x, const CalibrationSettings &default_value);
 }
 
 #endif

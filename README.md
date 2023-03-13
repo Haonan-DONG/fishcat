@@ -34,10 +34,11 @@ make -j
 - [ ] Add 23-parameter estimation method.
 
 2. Code Polishing
-- [ ] Add xml configuration in data preparing.
+- [X] Add xml configuration in data preparing.
 - [ ] Pre-requisition installation.
 - [ ] Install and uninstall in cmake.
 - [ ] Parallel.
+- [ ] Using third-Party xml class
 
 3. Documentary
 - [ ] Camera Lens.

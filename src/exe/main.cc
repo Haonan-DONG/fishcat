@@ -98,12 +98,12 @@ int RunIntrinsicCalibration(int argc, char **argv)
         return -1;
     }
 
-    return true;
+    return EXIT_SUCCESS;
 }
 
 int RunPanoramicStitching(int argc, char **argv)
 {
-    return true;
+    return EXIT_SUCCESS;
 }
 
 int main(int argc, char **argv)

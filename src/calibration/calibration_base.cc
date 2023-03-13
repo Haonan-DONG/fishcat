@@ -5,6 +5,14 @@
 
 namespace fishcat
 {
+    // since the static is used only for intrinsic calibration.
+    void read(const cv::FileNode &node, CalibrationSettings &x, const CalibrationSettings &default_value = CalibrationSettings())
+    {
+        if (node.empty())
+            x = default_value;
+        else
+            x.Read(node);
+    }
 
     void CalibrationSettings::Write(cv::FileStorage &fs) const // Write serialization for this class
     {
@@ -35,44 +43,31 @@ namespace fishcat
 
     void CalibrationSettings::Read(const cv::FileNode &node) // Read serialization for this class
     {
-        // node["BoardSize_Width"] >> board_size_.width;
-        // node["BoardSize_Height"] >> board_size_.height;
-        // node["Calibrate_Pattern"] >> pattern_to_use_;
-        // node["Square_Size"] >> square_size_;
-        // node["Write_outputFileName"] >> output_fileName_;
-        // node["Show_UndistortedImage"] >> show_undistorsed_;
-        // node["Show_Incomplete_Board"] >> show_partial_board_;
-        // node["Input"] >> input_;
-        // node["Input_Path"] >> input_path_;
+        node["BoardSize_Width"] >> board_size_.width;
+        node["BoardSize_Height"] >> board_size_.height;
+        node["Calibrate_Pattern"] >> pattern_to_use_;
+        node["Square_Size"] >> square_size_;
+        node["Calibrate_NrOfFrameToUse"] >> number_frames_;
+        node["Calibrate_FixAspectRatio"] >> aspect_ratio_;
+        node["Write_DetectedFeaturePoints"] >> bwrite_points_;
+        node["Write_extrinsicParameters"] >> bwrite_extrinsics_;
+        node["Write_outputFileName"] >> output_fileName_;
+        node["Calibrate_AssumeZeroTangentialDistortion"] >> calib_zero_tangent_dist_;
+        node["Calibrate_FixPrincipalPointAtTheCenter"] >> calib_fix_principal_point_;
+        node["Input_FlipAroundHorizontalAxis"] >> flip_vertical_;
+        node["Show_UndistortedImage"] >> show_undistorsed_;
+        node["Show_Incomplete_Board"] >> show_partial_board_;
+        node["Input"] >> input_;
+        node["Input_Path"] >> input_path_;
+        node["Input_Delay"] >> delay_;
+        node["Image_Path"] >> image_path_;
+        node["Calibrate_UseFisheyeModel"] >> use_fisheye_model_;
+        node["Calibration_Type"] >> calibration_type_;
 
-        // node["Image_Path"] >> image_path_;
-        // node["Calibrate_UseFisheyeModel"] >> use_fisheye_model_;
-        // node["Calibration_Type"] >> calibration_type_;
-
-        // if (calibration_type_ > 0)
-        // {
-        //     node["Camera_Intrinsic_Path"] >> camera_intrinsic_path_;
-        // }
-
-        // // if (calibration_type_ >= 4)
-        // // {
-        // //     // control field
-        // //     node["Center_Point"] >> center_point_xml_;
-        // //     node["Plane_Point"] >> plane_point_xml_;
-
-        // //     center_point_xml_ = input_path_ + center_point_xml_;
-        // //     plane_point_xml_ = input_path_ + plane_point_xml_;
-        // // }
-
-        // if (calibration_type_ == 2)
-        // {
-        //     node["Original_Fisheye_Image"] >> original_fisheye_image_;
-        // }
-
-        // input_ = input_path_ + input_;
-        // original_fisheye_image_ = input_path_ + original_fisheye_image_;
-        // output_fileName_ = input_path_ + output_fileName_;
-        // Interprate();
+        input_ = input_path_ + input_;
+        original_fisheye_image_ = input_path_ + original_fisheye_image_;
+        output_fileName_ = input_path_ + output_fileName_;
+        Interprate();
     }
 
     void CalibrationSettings::Interprate()
