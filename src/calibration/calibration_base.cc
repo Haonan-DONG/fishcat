@@ -60,6 +60,11 @@ namespace fishcat
         node["Calibrate_UseFisheyeModel"] >> use_fisheye_model_;
         node["Calibration_Type"] >> calibration_type_;
 
+        if (calibration_type_ > 0)
+        {
+            node["Camera_Intrinsic_Path"] >> camera_intrinsic_path_;
+        }
+
         input_ = input_path_ + input_;
         original_fisheye_image_ = input_path_ + original_fisheye_image_;
         output_fileName_ = input_path_ + output_fileName_;
@@ -79,11 +84,6 @@ namespace fishcat
         {
             LOG(ERROR) << "Invalid square size " << square_size_ << std::endl;
             good_input_ = false;
-        }
-
-        if (calibration_type_ == 2)
-        {
-            ReadStringList(original_fisheye_image_, origin_image_list_);
         }
 
         if (input_.empty()) // Check for valid input

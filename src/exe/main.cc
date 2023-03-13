@@ -39,6 +39,7 @@
 #include "base/log.h"
 #include "calibration/calibration_base.h"
 #include "calibration/intrinsic_calibration.h"
+#include "panoramic_process/panoramic_stitching.h"
 
 typedef std::function<int(int, char **)> command_func_t;
 
@@ -211,6 +212,79 @@ int RunIntrinsicCalibration(int argc, char **argv)
 
 int RunPanoramicStitching(int argc, char **argv)
 {
+    fishcat::IntrinsicCalibrationHelp();
+    fishcat::CalibrationSettings s;
+    const std::string input_settings_file = argc > 1 ? argv[1] : "test.xml";
+
+    // reading the input file and checking.
+    cv::FileStorage fs(input_settings_file, cv::FileStorage::READ); // Read the CalibrationSettings
+
+    if (!fs.isOpened())
+    {
+        LOG(ERROR) << "Could not open the configuration file: \""
+                   << input_settings_file
+                   << "\""
+                   << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    // from the setting in the xml file.
+    fs["Settings"] >> s;
+    fs.release(); // close CalibrationSettings file
+
+    if (!s.good_input_)
+    {
+        LOG(ERROR) << "Invalid input detected. Application stopping. "
+                   << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+
+int RunFisheyeExpansion(int argc, char **argv)
+{
+    fishcat::IntrinsicCalibrationHelp();
+    fishcat::CalibrationSettings s;
+    const std::string input_settings_file = argc > 1 ? argv[1] : "test.xml";
+
+    // reading the input file and checking.
+    cv::FileStorage fs(input_settings_file, cv::FileStorage::READ); // Read the CalibrationSettings
+
+    if (!fs.isOpened())
+    {
+        LOG(ERROR) << "Could not open the configuration file: \""
+                   << input_settings_file
+                   << "\""
+                   << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    // from the setting in the xml file.
+    fs["Settings"] >> s;
+    fs.release(); // close CalibrationSettings file
+
+    if (!s.good_input_)
+    {
+        LOG(ERROR) << "Invalid input detected. Application stopping. "
+                   << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    cv::Mat fisheye_intrinsic, fisheye_distortion_coeff;
+    cv::FileStorage f_camera(s.camera_intrinsic_path_, cv::FileStorage::READ);
+    f_camera["in1_intrinsic"] >> fisheye_intrinsic;
+    f_camera["in1_coff"] >> fisheye_distortion_coeff;
+    f_camera.release();
+
+    cv::Mat view;
+
+    for (int image_index = 0; image_index < s.image_list_.size(); image_index++)
+    {
+        view = s.NextImage();
+        fishcat::FisheyeExpansion(view, fisheye_intrinsic, fisheye_distortion_coeff);
+    }
+
     return EXIT_SUCCESS;
 }
 
@@ -222,6 +296,7 @@ int main(int argc, char **argv)
 
     commands.emplace_back("intrinsic_calibration", &RunIntrinsicCalibration);
     commands.emplace_back("panoramic_stitching", &RunPanoramicStitching);
+    commands.emplace_back("fisheye_expansion", &RunFisheyeExpansion);
 
     if (argc == 1)
     {

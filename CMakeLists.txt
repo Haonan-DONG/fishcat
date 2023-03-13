@@ -72,10 +72,12 @@ include_directories(include)
 
 aux_source_directory(src/base BASE_SRC)
 aux_source_directory(src/calibration CALIBRATION_SRC)
+aux_source_directory(src/panoramic_process PANORAMIC_SRC)
 file(GLOB EXE_SRCS "src/exe/*.cc")
 
 add_library(base ${MAKE_SHARED_LIBRARIES} ${BASE_SRC})
 add_library(calibration ${MAKE_SHARED_LIBRARIES} ${CALIBRATION_SRC})
+add_library(panoramic ${MAKE_SHARED_LIBRARIES} ${PANORAMIC_SRC})
 
 set(FISHCAT_EXTERNAL_LIBRARIES
     ${GLOG_LIBRARIES}
@@ -86,6 +88,7 @@ set(FISHCAT_EXTERNAL_LIBRARIES
 set(FISHCAT_INTERNAL_LIBRARIES
     base
     calibration
+    panoramic
 )
 
 add_executable(fishcat ${EXE_SRCS})
