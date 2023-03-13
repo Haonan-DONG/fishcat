@@ -33,7 +33,9 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <iomanip>
 
+#include "base/string_format.h"
 #include "base/log.h"
 #include "calibration/calibration_base.h"
 #include "calibration/intrinsic_calibration.h"
@@ -76,6 +78,8 @@ int RunIntrinsicCalibration(int argc, char **argv)
     fishcat::IntrinsicCalibrationHelp();
     fishcat::CalibrationSettings s;
     const std::string input_settings_file = argc > 1 ? argv[1] : "test.xml";
+
+    // reading the input file and checking.
     cv::FileStorage fs(input_settings_file, cv::FileStorage::READ); // Read the CalibrationSettings
 
     if (!fs.isOpened())
@@ -96,6 +100,110 @@ int RunIntrinsicCalibration(int argc, char **argv)
         LOG(ERROR) << "Invalid input detected. Application stopping. "
                    << std::endl;
         return -1;
+    }
+
+    // preparing the image for calibration.
+    std::vector<std::vector<cv::Point2f>> image_points;
+    std::vector<std::vector<cv::Point3f>> object_points;
+    cv::Mat camera_matrix, dist_coeffs;
+    cv::Size image_size;
+
+    const cv::Scalar RED(0, 0, 255), GREEN(0, 255, 0);
+    int current_image_index = 0;
+
+    // Processing the images.
+    for (int i = 0; i < s.image_list_.size(); i++)
+    {
+        int chessBoardFlags;
+        cv::Mat view, view_gray;
+        std::vector<cv::Point2f> point_buf;
+        std::vector<cv::Point3f> object_point;
+
+        switch (s.calibration_pattern_)
+        {
+        case fishcat::CalibrationSettings::CHESSBOARD:
+            view = s.NextImage();
+            image_size = view.size(); // Format input image.
+
+            cv::cvtColor(view, view_gray, cv::COLOR_BGR2GRAY);
+
+            chessBoardFlags = cv::CALIB_CB_ADAPTIVE_THRESH;
+            cv::findChessboardCorners(view_gray, s.board_size_, point_buf, chessBoardFlags);
+            cv::cornerSubPix(view_gray, point_buf, cv::Size(11, 11),
+                             cv::Size(-1, -1), cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 30, 0.1));
+            for (int i = 0; i < s.board_size_.height; ++i)
+                for (int j = 0; j < s.board_size_.width; ++j)
+                    object_point.push_back(cv::Point3f(j * s.square_size_, i * s.square_size_, 0));
+
+            image_points.push_back(point_buf);
+            object_points.push_back(object_point);
+
+            break;
+        default:
+            LOG(WARNING) << "Not suitable board found."
+                         << std::endl;
+            break;
+        }
+
+        LOG(INFO) << "Processing image " << std::setw(4) << current_image_index
+                  << " in " << s.image_list_.size()
+                  << " images, named of : "
+                  << s.image_list_[i]
+                  << std::endl;
+        current_image_index++;
+    }
+
+    // here saves the re-projection error.
+    if (image_points.size() > 0)
+    {
+        LOG(INFO) << "Images are all detected for their corner points, and will be calibrated."
+                  << std::endl;
+        RunCalibrationAndSave(s, image_size, camera_matrix, dist_coeffs, image_points, object_points);
+    }
+    else
+    {
+        LOG(ERROR) << "There are not sufficient chessboard corner points for calibration."
+                   << std::endl;
+        return false;
+    }
+
+    // ------------------- Quantitative Evaluation -------------------------------
+
+    // -----------------------Show the undistorted image for the image list ------------------------
+    if (s.input_type_ == fishcat::CalibrationSettings::IMAGE_LIST && s.show_undistorsed_)
+    {
+        cv::Mat map1, map2;
+        if (s.use_fisheye_model_)
+        {
+            cv::fisheye::initUndistortRectifyMap(camera_matrix, dist_coeffs, cv::Mat(),
+                                                 cv::getOptimalNewCameraMatrix(camera_matrix, dist_coeffs, image_size, 1, image_size, 0), image_size, CV_16SC2, map1, map2);
+        }
+        else
+        {
+            initUndistortRectifyMap(camera_matrix, dist_coeffs, cv::Mat(),
+                                    getOptimalNewCameraMatrix(camera_matrix, dist_coeffs, image_size, 1, image_size, 0),
+                                    image_size, CV_16SC2, map1, map2);
+        }
+
+#pragma omp parallel for
+        for (int i = 0; i < (int)s.image_list_.size(); i++)
+        {
+            cv::Mat view, rview;
+            std::string image_path = s.image_path_ + s.image_list_[i];
+            view = cv::imread(image_path, 1);
+            if (view.empty())
+            {
+                LOG(WARNING) << "Image is missing, name of : "
+                             << image_path
+                             << std::endl;
+                continue;
+            }
+            cv::remap(view, rview, map1, map2, cv::INTER_LINEAR);
+            LOG(INFO) << "Saving the undistorted images named : " + s.image_list_[i]
+                      << std::endl;
+            std::string undistorted_image_path = s.image_path_ + stringformat::Format("undistorted_image_{0}.jpg", s.image_list_[i]);
+            cv::imwrite(undistorted_image_path, rview);
+        }
     }
 
     return EXIT_SUCCESS;

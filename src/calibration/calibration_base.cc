@@ -21,7 +21,6 @@ namespace fishcat
            << "BoardSize_Height" << board_size_.height
            << "Square_Size" << square_size_
            << "Calibrate_Pattern" << pattern_to_use_
-           << "Calibrate_NrOfFrameToUse" << number_frames_
            << "Calibrate_FixAspectRatio" << aspect_ratio_
            << "Calibrate_AssumeZeroTangentialDistortion" << calib_zero_tangent_dist_
            << "Calibrate_FixPrincipalPointAtTheCenter" << calib_fix_principal_point_
@@ -34,7 +33,6 @@ namespace fishcat
            << "Calibrate_UseFisheyeModel" << use_fisheye_model_
 
            << "Input_FlipAroundHorizontalAxis" << flip_vertical_
-           << "Input_Delay" << delay_
            << "Input_Path" << input_path_
            << "Image_Path" << image_path_
            << "Input" << input_
@@ -47,7 +45,6 @@ namespace fishcat
         node["BoardSize_Height"] >> board_size_.height;
         node["Calibrate_Pattern"] >> pattern_to_use_;
         node["Square_Size"] >> square_size_;
-        node["Calibrate_NrOfFrameToUse"] >> number_frames_;
         node["Calibrate_FixAspectRatio"] >> aspect_ratio_;
         node["Write_DetectedFeaturePoints"] >> bwrite_points_;
         node["Write_extrinsicParameters"] >> bwrite_extrinsics_;
@@ -59,7 +56,6 @@ namespace fishcat
         node["Show_Incomplete_Board"] >> show_partial_board_;
         node["Input"] >> input_;
         node["Input_Path"] >> input_path_;
-        node["Input_Delay"] >> delay_;
         node["Image_Path"] >> image_path_;
         node["Calibrate_UseFisheyeModel"] >> use_fisheye_model_;
         node["Calibration_Type"] >> calibration_type_;
@@ -78,14 +74,10 @@ namespace fishcat
             LOG(ERROR) << "Invalid Board size: " << board_size_.width << " " << board_size_.height << std::endl;
             good_input_ = false;
         }
+
         if (square_size_ <= 10e-6)
         {
             LOG(ERROR) << "Invalid square size " << square_size_ << std::endl;
-            good_input_ = false;
-        }
-        if (number_frames_ <= 0)
-        {
-            LOG(ERROR) << "Invalid number of frames " << number_frames_ << std::endl;
             good_input_ = false;
         }
 
@@ -98,29 +90,9 @@ namespace fishcat
             input_type_ = INVALID;
         else
         {
-            if (input_[0] >= '0' && input_[0] <= '9')
-            {
-                std::stringstream ss(input_);
-                ss >> camera_id_;
-                input_type_ = CAMERA;
-            }
-            else
-            {
-                if (ReadStringList(input_, image_list_))
-                {
-                    input_type_ = IMAGE_LIST;
-                    number_frames_ = (number_frames_ < (int)image_list_.size()) ? number_frames_ : (int)image_list_.size();
-                }
-                else
-                    input_type_ = VIDEO_FILE;
-            }
-            if (input_type_ == CAMERA)
-                input_capture_.open(camera_id_);
-            if (input_type_ == VIDEO_FILE)
-                input_capture_.open(input_);
-            if (input_type_ != IMAGE_LIST && !input_capture_.isOpened())
-                input_type_ = INVALID;
+            ReadStringList(input_, image_list_);
         }
+
         if (input_type_ == INVALID)
         {
             LOG(ERROR) << " Inexistent input_: " << input_;
@@ -156,8 +128,6 @@ namespace fishcat
             calibration_pattern_ = CIRCLES_GRID;
         if (!pattern_to_use_.compare("ASYMMETRIC_CIRCLES_GRID"))
             calibration_pattern_ = ASYMMETRIC_CIRCLES_GRID;
-        if (!pattern_to_use_.compare("CVRS_SPECIAL_GRID"))
-            calibration_pattern_ = META_BOARD;
         if (calibration_pattern_ == NOT_EXISTING)
         {
             LOG(ERROR) << " Inexistent camera calibration mode: " << pattern_to_use_ << std::endl;
@@ -170,13 +140,7 @@ namespace fishcat
     {
         cv::Mat result;
         std::string image_path = "";
-        if (input_capture_.isOpened())
-        {
-            cv::Mat view0;
-            input_capture_ >> view0;
-            view0.copyTo(result);
-        }
-        else if (at_image_list_ < (int)image_list_.size())
+        if (at_image_list_ < (int)image_list_.size())
         {
             image_path = image_path_ + image_list_[at_image_list_++];
             result = cv::imread(image_path, cv::IMREAD_COLOR);

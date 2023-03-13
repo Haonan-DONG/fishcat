@@ -56,9 +56,7 @@ namespace fishcat
         cv::Size board_size_;                    // The cv::Size of the board -> Number of items by width and height
         CalibrationPattern calibration_pattern_; // One of the Chessboard, circles, or asymmetric circle pattern
         float square_size_;                      // The cv::Size of a square in your defined unit (point, millimeter,etc.
-        int number_frames_;                      // The number of frames to use from the input for calibration
         float aspect_ratio_;                     // The aspect ratio
-        int delay_;                              // In case of a video input
         bool bwrite_points_;                     //  Write detected feature points
         bool bwrite_extrinsics_;                 // Write extrinsic parameters
         bool calib_zero_tangent_dist_;           // Assume zero tangential distortion
@@ -70,7 +68,7 @@ namespace fishcat
         std::string input_; // The input ->
         std::string input_path_;
         std::string image_path_;
-        bool use_fisheye_model_;
+        bool use_fisheye_model_;            // Kannala-Brandt Model is used.
         int calibration_type_;              // 0 for intrinsic and 1 for extrinsic.
         std::string camera_intrinsic_path_; // yaml file for intrinsic path.
         std::string original_fisheye_image_;

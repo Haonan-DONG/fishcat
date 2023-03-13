@@ -35,6 +35,7 @@ make -j
 
 2. Code Polishing
 - [X] Add xml configuration in data preparing.
+- [ ] Add setting_base, separated from calibration_base class.
 - [ ] Pre-requisition installation.
 - [ ] Install and uninstall in cmake.
 - [ ] Parallel.
