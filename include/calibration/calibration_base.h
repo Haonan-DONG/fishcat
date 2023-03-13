@@ -40,8 +40,6 @@ namespace fishcat
         enum CalibrationInputType
         {
             INVALID,
-            CAMERA,
-            VIDEO_FILE,
             IMAGE_LIST
         };
 

@@ -91,6 +91,7 @@ namespace fishcat
         else
         {
             ReadStringList(input_, image_list_);
+            input_type_ == IMAGE_LIST;
         }
 
         if (input_type_ == INVALID)

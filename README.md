@@ -3,10 +3,11 @@
 ## Purpose
 Aim to generate a generic toolbox for fisheye lens, including fisheye lens intrinsic calibration, multi-fisheye lens extrinsic calibration, panoramic image stitching, Fisheye lens 3D reconstruction and Deep learning.
 
-## Pre-requisition lib
-- OpenCV
-- Ceres-Solver
+## Pre-requisition lib (Tested Version)
+- OpenCV (3.4.6)
+- Ceres-Solver (2.0.0)
 - GLOG
+- Eigen (3.3.9)
 
 ## How to use.
 ```shell
@@ -21,8 +22,8 @@ make -j
 
 ## Todo List
 1. Module and Functional
-- [ ] Add fisheye calibration pipeline for single board and sample data.
-- [ ] Add K-B model.
+- [X] Add fisheye calibration pipeline for single board and sample data.
+- [X] Add K-B model.
 - [ ] Add FOV model.
 - [ ] Add longitude-latitude expansion.(Cylindrical Equidistant Projection or Equirectangular Projection)
 - [ ] Add centroid circle estimation.
@@ -36,18 +37,23 @@ make -j
 2. Code Polishing
 - [X] Add xml configuration in data preparing.
 - [ ] Add setting_base, separated from calibration_base class.
-- [ ] Pre-requisition installation.
+- [X] Pre-requisition installation.
 - [ ] Install and uninstall in cmake.
 - [ ] Parallel.
 - [ ] Using third-Party xml class
+- [ ] s.file_type = unknown?
 
 3. Documentary
 - [ ] Camera Lens.
 - [ ] How to chose proper model for modeling the lens.
 
 4. Machine
+- [X] GoPro
 - [ ] Insta360
 - [ ] Stereo Fisheye
+
+5. Demo Data
+- GoPro Hero 4 with chessboard (14\*9) in [Baidu Disk](https://pan.baidu.com/s/1pjY5FuheeUftFYjDW7jffg)(*pwd: z7jz*).
 
 ## Third_Party
 - [OpenCV](https://github.com/opencv/opencv)

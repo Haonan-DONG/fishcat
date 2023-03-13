@@ -88,7 +88,7 @@ int RunIntrinsicCalibration(int argc, char **argv)
                    << input_settings_file
                    << "\""
                    << std::endl;
-        return -1;
+        return EXIT_FAILURE;
     }
 
     // from the setting in the xml file.
@@ -99,7 +99,7 @@ int RunIntrinsicCalibration(int argc, char **argv)
     {
         LOG(ERROR) << "Invalid input detected. Application stopping. "
                    << std::endl;
-        return -1;
+        return EXIT_FAILURE;
     }
 
     // preparing the image for calibration.
@@ -164,13 +164,13 @@ int RunIntrinsicCalibration(int argc, char **argv)
     {
         LOG(ERROR) << "There are not sufficient chessboard corner points for calibration."
                    << std::endl;
-        return false;
+        return EXIT_FAILURE;
     }
 
     // ------------------- Quantitative Evaluation -------------------------------
 
     // -----------------------Show the undistorted image for the image list ------------------------
-    if (s.input_type_ == fishcat::CalibrationSettings::IMAGE_LIST && s.show_undistorsed_)
+    if (s.show_undistorsed_)
     {
         cv::Mat map1, map2;
         if (s.use_fisheye_model_)
