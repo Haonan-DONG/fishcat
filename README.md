@@ -24,7 +24,7 @@ make -j
 1. Module and Functional
 - [X] Add fisheye calibration pipeline for single board and sample data.
 - [X] Add K-B model.
-- [ ] Add longitude-latitude expansion.(Cylindrical Equidistant Projection or Equirectangular Projection).
+- [X] Add longitude-latitude expansion.(Cylindrical Equidistant Projection or Equirectangular Projection).
 - [ ] Add panoramic stitching algorithms.
 - [ ] Add FOV model.
 - [ ] Add centroid circle estimation.
@@ -33,6 +33,7 @@ make -j
 - [ ] Add blender code for virtual data.
 - [ ] Add blender patch for K-B model.
 - [ ] Add 23-parameter estimation method.
+- [ ] Add pixel interpolation.
 
 2. Code Polishing
 - [X] Add xml configuration in data preparing.
@@ -44,6 +45,7 @@ make -j
 - [ ] Parallel for image undistortion.
 - [ ] Using third-Party xml class
 - [ ] s.file_type = unknown?
+- [ ] Single image failure bug.
 
 3. Documentary
 - [ ] Camera Lens.
