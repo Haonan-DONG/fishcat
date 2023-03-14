@@ -88,3 +88,16 @@ Kannala-Brandt Model (Instead of FOV expansion.)
 
 ## Reference
 1. [Paper](None)
+
+## Citation
+
+If you use this library or find the documentation useful for your research, please consider citing:
+
+```bibtex
+@misc{Dong2023fishcat,
+    author    = {Haonan Dong},
+    title     = {FishCat:Fisheye Calibration and Application Toolbox.},
+    year      = {2023},
+    url       = {https://github.com/Haonan-DONG/fisheye-toolbox},
+}
+```
