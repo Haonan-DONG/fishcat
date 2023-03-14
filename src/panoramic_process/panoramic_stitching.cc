@@ -82,12 +82,29 @@ namespace fishcat
             }
         }
 
+        cv::Mat coord_unit_sphere = cv::Mat::zeros(3, 1, CV_64FC1);
+        coord_unit_sphere.at<double>(0, 0) = sin(theta) * cos(phi);
+        coord_unit_sphere.at<double>(1, 0) = sin(theta) * sin(phi);
+        coord_unit_sphere.at<double>(2, 0) = cos(theta);
+
         // calculate latitude and longitude from theta and phi.
         // Note here use the simplified form.
-        double longitude = phi;
-        double latitude = 3.1415926 / 2 - theta; // bug for pi.
+        // Todo rotate the phi and theta by [0,0,1][0,1,0][1,0,0]
+        cv::Mat rotation = (cv::Mat_<double>(3, 3) << 0, 0, 1, 0, 1, 0, 1, 0, 0);
+        coord_unit_sphere = rotation * coord_unit_sphere;
+
+        // instead of using [theta, phi] in 2d coordinate, the [x,y,z] is in 3-d coordinate.
+        double x_rotated = coord_unit_sphere.at<double>(0, 0);
+        double y_rotated = coord_unit_sphere.at<double>(1, 0);
+        double z_rotated = coord_unit_sphere.at<double>(2, 0);
+
+        double r_rotated = sqrt(x_rotated * x_rotated + y_rotated * y_rotated);
+
+        double longitude = atan2(y_rotated, x_rotated);
+        double latitude = atan2(z_rotated, r_rotated); // bug for pi.
 
         // calculate the normal cylinder coordinate.
+        // normalize by PI and PI/2
         normal_cylinder_xy.x = longitude / 3.1415926;
         normal_cylinder_xy.y = 2 * latitude / 3.1415926;
 

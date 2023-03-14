@@ -53,11 +53,11 @@ make -j
 
 4. Machine
 - [X] GoPro
-- [ ] Insta360
+- [X] Insta360
 - [ ] Stereo Fisheye
 
 5. Demo Data
-- GoPro Hero 4 with chessboard (14\*9) in [Baidu Disk](https://pan.baidu.com/s/1pjY5FuheeUftFYjDW7jffg)(*pwd: z7jz*).
+- GoPro Hero 4 with chessboard (14\*9) in [Baidu Disk](https://pan.baidu.com/s/1pjY5FuheeUftFYjDW7jffg)(*pwd: z7jz*). Note that the abs_path_to_xml and abs_path_to_img should be specified.
 
 ## Third_Party
 - [OpenCV](https://github.com/opencv/opencv)
