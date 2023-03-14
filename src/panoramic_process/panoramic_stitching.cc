@@ -75,9 +75,9 @@ namespace fishcat
             theta9 = theta8 * theta;
 
             // Bugs for not converge.
-            if (theta > (90 * 3.1415926 / 180))
+            if (theta > (100 * 3.1415926 / 180))
             {
-                theta = (90 * 3.1415926 / 180);
+                theta = (100 * 3.1415926 / 180);
                 break;
             }
         }

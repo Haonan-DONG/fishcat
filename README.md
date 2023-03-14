@@ -20,6 +20,31 @@ cmake ..
 make -j
 ```
 
+## Module
+### Fisheye Intrinsic Calibration.
+```shell
+fishcat intrinsic_calibration path_to_settings_intrinsic.xml
+```
+
+1. Demo Data
+- GoPro Hero 4 with chessboard (14\*9) in [Baidu Disk](https://pan.baidu.com/s/1pjY5FuheeUftFYjDW7jffg)(*pwd: z7jz*). Note that the abs_path_to_xml and abs_path_to_img should be specified.
+2. Distortion model
+Kannala-Brandt Model.
+
+### Single-Fisheye Cylindrical Expansion.
+```shell
+fishcat fisheye_expansion path_to_settings.xml
+```
+
+1. Demo Data
+
+Convert calibrated fisheye image into cylindrical projection. The original fisheye image is calibrated with known intrinsics and distortion. Data will be released.
+ <div align=center> <img src="doc/imgs/fisheye_expansion.png"
+  width = 100%/> </div>
+
+2. Distortion model.
+Kannala-Brandt Model (Instead of FOV expansion.)
+
 ## Todo List
 1. Module and Functional
 - [X] Add fisheye calibration pipeline for single board and sample data.
@@ -55,9 +80,6 @@ make -j
 - [X] GoPro
 - [X] Insta360
 - [ ] Stereo Fisheye
-
-5. Demo Data
-- GoPro Hero 4 with chessboard (14\*9) in [Baidu Disk](https://pan.baidu.com/s/1pjY5FuheeUftFYjDW7jffg)(*pwd: z7jz*). Note that the abs_path_to_xml and abs_path_to_img should be specified.
 
 ## Third_Party
 - [OpenCV](https://github.com/opencv/opencv)
