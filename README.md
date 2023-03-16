@@ -51,6 +51,8 @@ Kannala-Brandt Model (Instead of FOV expansion.)
 - [X] Add K-B model.
 - [X] Add longitude-latitude expansion.(Cylindrical Equidistant Projection or Equirectangular Projection).
 - [ ] Add panoramic stitching algorithms.
+- [ ] Add PNP on extrinsic calibration.
+- [ ] Try to test different PnP module.
 - [ ] Add FOV model.
 - [ ] Add centroid circle estimation.
 - [ ] Add Ortho-rectified implementation.
