@@ -46,23 +46,30 @@ Convert calibrated fisheye image into cylindrical projection. The original fishe
 Kannala-Brandt Model (Instead of FOV expansion.)
 
 ## Todo List
-1. Module and Functional
+1. Calibration Module
 - [X] Add fisheye calibration pipeline for single board and sample data.
 - [X] Add K-B model.
-- [X] Add longitude-latitude expansion.(Cylindrical Equidistant Projection or Equirectangular Projection).
-- [ ] Add panoramic stitching algorithms.
 - [ ] Add PNP on extrinsic calibration.
 - [ ] Try to test different PnP module.
 - [ ] Add FOV model.
 - [ ] Add centroid circle estimation.
-- [ ] Add Ortho-rectified implementation.
 - [ ] Add omnidirectional model.
-- [ ] Add blender code for virtual data.
-- [ ] Add blender patch for K-B model.
 - [ ] Add 23-parameter estimation method.
 - [ ] Add pixel interpolation.
 
-2. Code Polishing
+2. Panoramic Stitching Module
+- [X] Add longitude-latitude expansion.(Cylindrical Equidistant Projection or Equirectangular Projection).
+- [ ] Add panoramic stitching algorithms.
+
+3. Fisheye Projection Module
+- [ ] Add Ortho-rectified implementation.
+- [ ] Add perspective projection and cube-map expansion.
+
+4. Data Generator Module
+- [ ] Add blender code for virtual data.
+- [ ] Add blender patch for K-B model.
+
+5. Code Polishing
 - [X] Add xml configuration in data preparing.
 - [ ] Initialization function.
 - [ ] Add setting_base, separated from calibration_base class.
@@ -74,11 +81,11 @@ Kannala-Brandt Model (Instead of FOV expansion.)
 - [ ] s.file_type = unknown?
 - [ ] Single image failure bug.
 
-3. Documentary
+6. Documentary
 - [ ] Camera Lens.
 - [ ] How to chose proper model for modeling the lens.
 
-4. Machine
+7. Machine
 - [X] GoPro
 - [X] Insta360
 - [ ] Stereo Fisheye
